@@ -10,6 +10,11 @@
             "taskName": "XSS Example",
             "suppressTaskName": true,
             "args": ["go", "run", "xss.go"]
+        },
+        {
+            "taskName": "CSRF Example",
+            "suppressTaskName": true,
+            "args": ["go", "run", "csrf.go"]
         }
     ]
 }

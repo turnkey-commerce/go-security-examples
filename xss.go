@@ -1,16 +1,16 @@
 package main
 
 import (
-	"bufio"
-	"bytes"
 	"fmt"
 	htmlTemplate "html/template"
 	"net/http"
-	"os"
 	textTemplate "text/template"
 
 	"github.com/gorilla/mux"
+	"github.com/turnkey-commerce/go-security-examples/utility"
 )
+
+var xssDatastore = "database/xss.txt"
 
 func getXSSHome(rw http.ResponseWriter, req *http.Request) {
 	t, _ := htmlTemplate.ParseFiles("templates/xssHome.gohtml")
@@ -24,17 +24,14 @@ func getXSSInput(rw http.ResponseWriter, req *http.Request) {
 
 func postXSS(rw http.ResponseWriter, req *http.Request) {
 	xssInput := req.PostFormValue("xssInput")
-	f, err := os.Create("database/xss.txt")
-	check(err)
-	defer f.Close()
-	_, err = f.WriteString(xssInput)
-	check(err)
+	err := utility.SaveDatastoreString(xssDatastore, xssInput)
+	utility.Check(err)
 	http.Redirect(rw, req, "/", http.StatusSeeOther)
 }
 
 func getXSSView1(rw http.ResponseWriter, req *http.Request) {
-	xssInput, err := getXSSText("database/xss.txt")
-	check(err)
+	xssInput, err := utility.GetDatastoreString(xssDatastore)
+	utility.Check(err)
 	vars := map[string]interface{}{
 		"XSSInput": xssInput,
 	}
@@ -43,8 +40,8 @@ func getXSSView1(rw http.ResponseWriter, req *http.Request) {
 }
 
 func getXSSView2(rw http.ResponseWriter, req *http.Request) {
-	xssInput, err := getXSSText("database/xss.txt")
-	check(err)
+	xssInput, err := utility.GetDatastoreString(xssDatastore)
+	utility.Check(err)
 	vars := map[string]interface{}{
 		"XSSInput": xssInput,
 	}
@@ -66,25 +63,4 @@ func main() {
 	fmt.Println("Starting server on port 8000...")
 	http.ListenAndServe(":8000", nil)
 
-}
-
-func check(e error) {
-	if e != nil {
-		panic(e)
-	}
-}
-
-func getXSSText(file string) (string, error) {
-	f, err := os.Open(file)
-	if err != nil {
-		return "", err
-	}
-	defer f.Close()
-
-	var buffer bytes.Buffer
-	scanner := bufio.NewScanner(f)
-	for scanner.Scan() {
-		buffer.WriteString(scanner.Text())
-	}
-	return buffer.String(), scanner.Err()
 }

@@ -1,0 +1,13 @@
+<html>
+<head><title>CSRF Example - No Protection</title></head>
+<body>
+<h1>CSRF Example 2 - With Protection</h1>
+<form action="/protect/csrfPost2" method="post" id="login">
+    <p>Enter withdrawal amount:</p>
+    <input type="text" size="5" name="csrfInput2" value="5000">
+    <!--This will inject the token for the request into the form fields:-->
+    {{ .csrfField }}
+    <p><button type="submit">Submit</button></p>
+</form>
+</body>
+</html>
