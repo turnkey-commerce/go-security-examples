@@ -75,3 +75,4 @@ $RECYCLE.BIN/
 *.lnk
 database/csrf.txt
 database/xss.txt
+database/sql_injection.db

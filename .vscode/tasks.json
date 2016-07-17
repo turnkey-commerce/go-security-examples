@@ -15,6 +15,11 @@
             "taskName": "CSRF Example",
             "suppressTaskName": true,
             "args": ["go", "run", "csrf.go"]
+        },
+        {
+            "taskName": "SQL Injection Example",
+            "suppressTaskName": true,
+            "args": ["go", "run", "sql_injection.go"]
         }
     ]
 }

@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
+	"html/template"
 	"net/http"
-	"text/template"
 
 	"strconv"
 
@@ -34,8 +34,8 @@ func getCSRFInput1(rw http.ResponseWriter, req *http.Request) {
 }
 
 func postCSRF1(rw http.ResponseWriter, req *http.Request) {
-	csrfInput1 := req.PostFormValue("csrfInput1")
-	processWithdrawal(csrfInput1)
+	amount := req.PostFormValue("amount")
+	processWithdrawal(amount)
 	http.Redirect(rw, req, "/", http.StatusSeeOther)
 }
 
@@ -48,8 +48,8 @@ func getCSRFInput2(rw http.ResponseWriter, req *http.Request) {
 }
 
 func postCSRF2(rw http.ResponseWriter, req *http.Request) {
-	csrfInput2 := req.PostFormValue("csrfInput2")
-	processWithdrawal(csrfInput2)
+	amount := req.PostFormValue("amount")
+	processWithdrawal(amount)
 	http.Redirect(rw, req, "/", http.StatusSeeOther)
 }
 

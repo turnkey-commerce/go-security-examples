@@ -1,0 +1,5 @@
+POST http://localhost:8000/protect/csrfPost2 HTTP/1.1
+Content-Length: 11
+Content-Type: application/x-www-form-urlencoded
+
+amount=5000
