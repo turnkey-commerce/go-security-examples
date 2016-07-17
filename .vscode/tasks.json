@@ -1,9 +1,15 @@
 {
-    // See https://go.microsoft.com/fwlink/?LinkId=733558
-    // for the documentation about the tasks.json format
     "version": "0.1.0",
-    "command": "echo",
+    "command": "cmd",
     "isShellCommand": true,
-    "args": ["Hello World"],
-    "showOutput": "always"
+    "showOutput": "always",
+    "args": ["/C"],
+
+    "tasks": [
+        {
+            "taskName": "XSS Example",
+            "suppressTaskName": true,
+            "args": ["go", "run", "xss.go"]
+        }
+    ]
 }

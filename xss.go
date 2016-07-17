@@ -2,6 +2,8 @@ package main
 
 import (
 	"bufio"
+	"bytes"
+	"fmt"
 	htmlTemplate "html/template"
 	"net/http"
 	"os"
@@ -9,6 +11,11 @@ import (
 
 	"github.com/gorilla/mux"
 )
+
+func getXSSHome(rw http.ResponseWriter, req *http.Request) {
+	t, _ := htmlTemplate.ParseFiles("templates/xssHome.gohtml")
+	t.Execute(rw, nil)
+}
 
 func getXSSInput(rw http.ResponseWriter, req *http.Request) {
 	t, _ := htmlTemplate.ParseFiles("templates/xssInput.gohtml")
@@ -22,6 +29,7 @@ func postXSS(rw http.ResponseWriter, req *http.Request) {
 	defer f.Close()
 	_, err = f.WriteString(xssInput)
 	check(err)
+	http.Redirect(rw, req, "/", http.StatusSeeOther)
 }
 
 func getXSSView1(rw http.ResponseWriter, req *http.Request) {
@@ -51,10 +59,13 @@ func main() {
 	r.HandleFunc("/xssPost", postXSS).Methods("POST")
 	r.HandleFunc("/xssView1", getXSSView1).Methods("GET")
 	r.HandleFunc("/xssView2", getXSSView2).Methods("GET")
+	r.HandleFunc("/", getXSSHome).Methods("GET")
 
 	http.Handle("/", r)
 
+	fmt.Println("Starting server on port 8000...")
 	http.ListenAndServe(":8000", nil)
+
 }
 
 func check(e error) {
@@ -63,17 +74,17 @@ func check(e error) {
 	}
 }
 
-func getXSSText(file string) ([]string, error) {
+func getXSSText(file string) (string, error) {
 	f, err := os.Open(file)
 	if err != nil {
-		return []string{}, err
+		return "", err
 	}
 	defer f.Close()
 
-	var lines []string
+	var buffer bytes.Buffer
 	scanner := bufio.NewScanner(f)
 	for scanner.Scan() {
-		lines = append(lines, scanner.Text())
+		buffer.WriteString(scanner.Text())
 	}
-	return lines, scanner.Err()
+	return buffer.String(), scanner.Err()
 }
