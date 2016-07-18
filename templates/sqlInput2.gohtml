@@ -1,0 +1,13 @@
+<html>
+<head><title>SQL Injection Example- Parameterized</title></head>
+<body>
+<h1>SQL Injection Example - Parameterized</h1>
+<form action="/sqlPost2" method="post">
+    <p>Enter query for ContactID:</p>
+    <p>Example malicious query: <pre>1; Delete FROM Contacts;</pre></p>
+    <p>Example expected query: <pre>1</pre></p>
+    <input type="text" size="50" name="query" value="">
+    <p><button type="submit">Submit</button></p>
+</form>
+</body>
+</html>

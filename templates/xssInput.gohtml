@@ -2,7 +2,7 @@
 <head><title>XSS Example - Input</title></head>
 <body>
 <h1>XSS Example - Input</h1>
-<form action="/xssPost" method="post" id="login">
+<form action="/xssPost" method="post">
     <p>Provide some malicious input:</p>
     <input type="text" size="50" name="xssInput" value="<script>alert('You have been pwn3d')</script>">
     <p><button type="submit">Submit</button></p>

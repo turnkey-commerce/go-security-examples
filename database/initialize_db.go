@@ -24,9 +24,10 @@ VALUES ('Jane Doe', 'JaneDoe@example.com', 5125551213);
 
 // InitializeDB creates the DB file and the schema if the file doesn't exist.
 func InitializeDB(dbPath string) (*sql.DB, error) {
-	newDB := false
-	if _, err := os.Stat(dbPath); os.IsNotExist(err) {
-		newDB = true
+	// Delete the old DB to sart fresh.
+	delErr := deleteDb(dbPath)
+	if delErr != nil {
+		return nil, delErr
 	}
 
 	db, err := sql.Open("sqlite3", dbPath)
@@ -34,12 +35,10 @@ func InitializeDB(dbPath string) (*sql.DB, error) {
 		return nil, err
 	}
 
-	if newDB {
-		fmt.Println("New Database, creating Schema...")
-		err = createSchema(db)
-		if err != nil {
-			return nil, err
-		}
+	fmt.Println("New Database, creating Schema...")
+	err = createSchema(db)
+	if err != nil {
+		return nil, err
 	}
 
 	return db, nil
@@ -59,5 +58,16 @@ func createSchema(db *sql.DB) error {
 	}
 
 	tx.Commit()
+	return nil
+}
+
+// deleteDb removes the DB file.
+func deleteDb(dbPath string) error {
+	if _, err := os.Stat(dbPath); err == nil {
+		err := os.Remove(dbPath)
+		if err != nil {
+			return err
+		}
+	}
 	return nil
 }
